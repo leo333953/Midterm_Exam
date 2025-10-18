@@ -15,9 +15,9 @@ $routes->post('/register', 'Auth::register');
 $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::login');
 
-$routes->get('auth/logout', 'Auth::logout'); 
+$routes->get('/auth/logout', 'Auth::logout'); 
 $routes->get('/dashboard', 'Auth::dashboard');
-$routes->get('announcements', 'Announcement::index');
+$routes->get('/announcements', 'Announcement::index');
 
 // Role-based dashboard routes with authorization filter
 $routes->group('admin', ['filter' => 'roleauth'], function($routes) {
@@ -28,10 +28,8 @@ $routes->group('teacher', ['filter' => 'roleauth'], function($routes) {
     $routes->get('dashboard', 'Teacher::dashboard');
 });
 
-$routes->get('dashboard', 'Auth::dashboard');
 // For enrolling via AJAX
 $routes->post('course/enroll', 'Course::enroll');
 
 // For displaying enrolled courses / success message
 $routes->get('course/enroll', 'Course::enrollPage');
-// Keep your existing routes below these

@@ -101,13 +101,6 @@
                 <a href="<?= base_url('announcements') ?>" class="btn btn-outline-primary btn-sm">View All</a>
             </div>
             
-            <!-- Debug: Show announcements count -->
-            <div class="alert alert-info">
-                <strong>Debug:</strong> Found <?= count($announcements ?? []) ?> announcements
-                <?php if (!empty($announcements)): ?>
-                    <br>First announcement: <?= esc($announcements[0]['title'] ?? 'No title') ?>
-                <?php endif; ?>
-            </div>
             
             <?php if (empty($announcements)): ?>
                 <p class="text-muted">No announcements available.</p>
