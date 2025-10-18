@@ -18,6 +18,11 @@ $routes->post('/login', 'Auth::login');
 $routes->get('/auth/logout', 'Auth::logout'); 
 $routes->get('/dashboard', 'Auth::dashboard');
 $routes->get('/announcements', 'Announcement::index');
+$routes->get('announcements', 'Announcement::index');
+$routes->get('announcements/', 'Announcement::index');
+$routes->get('test-simple', function() {
+    return "SIMPLE TEST WORKING! Time: " . date('Y-m-d H:i:s');
+});
 
 // Role-based dashboard routes with authorization filter
 $routes->group('admin', ['filter' => 'roleauth'], function($routes) {
