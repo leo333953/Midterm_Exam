@@ -6,6 +6,7 @@
         <h3 class="text-white mb-4">LMS Portal</h3>
         <ul class="nav flex-column mb-4">
             <?php if($user_role === 'admin'): ?>
+                <li class="nav-item mb-2"><a href="<?= base_url('announcements') ?>" class="nav-link text-white"><i class="bi bi-chat-left-text me-2"></i>Announcements</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('users') ?>" class="nav-link text-white"><i class="bi bi-people-fill me-2"></i>Manage Users</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('reports') ?>" class="nav-link text-white"><i class="bi bi-bar-chart-line me-2"></i>Analytics</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('courses') ?>" class="nav-link text-white"><i class="bi bi-journal-bookmark me-2"></i>Course Catalog</a></li>
@@ -16,6 +17,7 @@
                 <li class="nav-item mb-2"><a href="<?= base_url('lessons') ?>" class="nav-link text-white"><i class="bi bi-upload me-2"></i>Upload Lessons</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('announcements') ?>" class="nav-link text-white"><i class="bi bi-chat-left-text me-2"></i>Announcements</a></li>
             <?php elseif($user_role === 'student'): ?>
+                <li class="nav-item mb-2"><a href="<?= base_url('announcements') ?>" class="nav-link text-white"><i class="bi bi-chat-left-text me-2"></i>Announcements</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('courses') ?>" class="nav-link text-white"><i class="bi bi-book me-2"></i>My Courses</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('assignments') ?>" class="nav-link text-white"><i class="bi bi-file-earmark-text me-2"></i>Assignments</a></li>
                 <li class="nav-item mb-2"><a href="<?= base_url('groups') ?>" class="nav-link text-white"><i class="bi bi-people me-2"></i>Study Groups</a></li>
@@ -88,6 +90,40 @@
                         <h5>Active Courses</h5>
                         <h2><?= count($courses) ?></h2>
                     </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Announcements Section -->
+        <div class="card shadow-sm p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Latest Announcements</h5>
+                <a href="<?= base_url('announcements') ?>" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            
+            <!-- Debug: Show announcements count -->
+            <div class="alert alert-info">
+                <strong>Debug:</strong> Found <?= count($announcements ?? []) ?> announcements
+                <?php if (!empty($announcements)): ?>
+                    <br>First announcement: <?= esc($announcements[0]['title'] ?? 'No title') ?>
+                <?php endif; ?>
+            </div>
+            
+            <?php if (empty($announcements)): ?>
+                <p class="text-muted">No announcements available.</p>
+            <?php else: ?>
+                <div class="row">
+                    <?php foreach ($announcements as $announcement): ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title text-primary"><?= esc($announcement['title']) ?></h6>
+                                    <p class="card-text small text-muted"><?= esc(substr($announcement['content'], 0, 100)) ?>...</p>
+                                    <small class="text-muted"><?= date('M j, Y', strtotime($announcement['created_at'])) ?></small>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </div>

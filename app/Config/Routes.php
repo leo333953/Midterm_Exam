@@ -17,18 +17,15 @@ $routes->post('/login', 'Auth::login');
 
 $routes->get('auth/logout', 'Auth::logout'); 
 $routes->get('/dashboard', 'Auth::dashboard');
+$routes->get('announcements', 'Announcement::index');
 
-// Temporary routes for Step 2 testing - Add these lines
-$routes->get('/admin/dashboard', function() {
-    return "Step 2 Working! Admin Dashboard - Role: " . session()->get('role');
+// Role-based dashboard routes with authorization filter
+$routes->group('admin', ['filter' => 'roleauth'], function($routes) {
+    $routes->get('dashboard', 'Admin::dashboard');
 });
 
-$routes->get('/teacher/dashboard', function() {
-    return "Step 2 Working! Teacher Dashboard - Role: " . session()->get('role');
-});
-
-$routes->get('/student/dashboard', function() {
-    return "Step 2 Working! Student Dashboard - Role: " . session()->get('role');
+$routes->group('teacher', ['filter' => 'roleauth'], function($routes) {
+    $routes->get('dashboard', 'Teacher::dashboard');
 });
 
 $routes->get('dashboard', 'Auth::dashboard');

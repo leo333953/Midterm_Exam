@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\EnrollmentModel;
+use App\Models\AnnouncementModel;
 
 class Auth extends BaseController
 {
@@ -11,6 +12,7 @@ class Auth extends BaseController
     protected $validation;
     protected $db;
     protected $enrollmentModel;
+    protected $announcementModel;
 
     public function __construct()
     {
@@ -18,6 +20,7 @@ class Auth extends BaseController
         $this->validation = \Config\Services::validation();
         $this->db = \Config\Database::connect();
         $this->enrollmentModel = new EnrollmentModel();
+        $this->announcementModel = new AnnouncementModel();
     }
 
     // REGISTER
@@ -98,7 +101,17 @@ class Auth extends BaseController
                     $this->session->set($sessionData);
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-                    return redirect()->to(base_url('dashboard'));
+                    // Role-based redirection
+                    $userRole = $user['role'] ?? 'student';
+                    switch ($userRole) {
+                        case 'admin':
+                            return redirect()->to(base_url('admin/dashboard'));
+                        case 'teacher':
+                            return redirect()->to(base_url('teacher/dashboard'));
+                        case 'student':
+                        default:
+                            return redirect()->to(base_url('announcements'));
+                    }
                 } else {
                     $this->session->setFlashdata('error', 'Invalid email or password.');
                     return redirect()->to(base_url('login'));
@@ -147,11 +160,15 @@ class Auth extends BaseController
                 ->getResultArray();
         }
 
+        // Fetch latest announcements
+        $announcements = $this->announcementModel->orderBy('created_at', 'DESC')->limit(3)->findAll();
+
         $data = [
             'user_name'       => $user_name,
             'user_role'       => $user_role,
             'courses'         => $courses,
-            'enrolledCourses' => $enrolledCourses
+            'enrolledCourses' => $enrolledCourses,
+            'announcements'   => $announcements
         ];
 
         return view('auth/dashboard', $data);
